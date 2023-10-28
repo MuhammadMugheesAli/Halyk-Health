@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "91268406752",
+    "project_id": "halyk-health",
+    "storage_bucket": "halyk-health.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91268406752:android:21fc5ff384f3067df15f85",
+        "android_client_info": {
+          "package_name": "com.halyk_health.halyk_health"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91268406752-a5af3g3bhem8rnhri2r789l2t2aqbrbr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.halyk_health.halyk_health",
+            "certificate_hash": "ebccb497dcd98af5365f9116d1f8bac815b996cc"
+          }
+        },
+        {
+          "client_id": "91268406752-ahien7ua7d5sqa8a9hed7r2ip4td5ja9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnNen_Dcj2QDCvqVCnathQ1L5y0JrYAAA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91268406752-ahien7ua7d5sqa8a9hed7r2ip4td5ja9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "91268406752-o9acu0aerlgkr1jtagvjnhofjccmqkl4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.halykhealth.halykHealth"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
