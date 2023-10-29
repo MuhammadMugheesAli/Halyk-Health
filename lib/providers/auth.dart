@@ -43,7 +43,7 @@ class Auth with ChangeNotifier {
       await prefs.setBool('isLoggedIn', true);
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(data['phoneNumber'])
+          .doc("${data['phoneNumber']}_${data['role']}")
           .set(data)
           .onError((e, _) => throw Exception("Error writing document: $e"));
       currentUser = model.User(
@@ -63,7 +63,7 @@ class Auth with ChangeNotifier {
   Future<bool> checkIfUserExists(String phoneNumber,String role) async {
     try {
       var collectionRef = FirebaseFirestore.instance.collection('users');
-      var doc = await collectionRef.doc(phoneNumber).get();
+      var doc = await collectionRef.doc("${phoneNumber}_$role").get();
       if(doc.exists){
         if(doc.get('role') == role){
           return true;
@@ -80,7 +80,7 @@ class Auth with ChangeNotifier {
     try {
       if (await checkIfUserExists(phoneNumber,role)) {
         var data =
-            FirebaseFirestore.instance.collection('users').doc(phoneNumber);
+            FirebaseFirestore.instance.collection('users').doc("${phoneNumber}_$role");
         late model.User user;
         await data.get().then((value) {
           user = model.User(
@@ -101,13 +101,13 @@ class Auth with ChangeNotifier {
             await prefs.setString('role', role);
             await prefs.setBool('isLoggedIn', true);
           } else {
-            throw Exception("User doesn't exist");
+            throw Exception("User doesn't exist.Please check your phone number and role");
           }
         } else {
           throw Exception("Incorrect Password");
         }
       } else {
-        throw Exception("User doesn't exist");
+        throw Exception("User doesn't exist.Please check your phone number and role");
       }
     } catch (e) {
       throw Exception(e);
@@ -119,7 +119,7 @@ class Auth with ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(prefs.getString('phoneNumber'))
+        .doc("${prefs.getString('phoneNumber')}_${prefs.getString('role')}")
         .get()
         .then((value) => currentUser = model.User(
             value['firstName'],
@@ -138,6 +138,7 @@ class Auth with ChangeNotifier {
     await prefs.remove('role');
     await prefs.setBool('isLoggedIn', false);
     currentUser = null;
+    await init();
     notifyListeners();
   }
 }
