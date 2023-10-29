@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:halyk_health/screens/doctor/doctor_home_page.dart';
-import 'package:halyk_health/screens/otp_verification.dart';
 import 'package:halyk_health/screens/patient/patient_home_page.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +26,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   var clinicNameController = TextEditingController();
   var iinController = TextEditingController();
 
-  
   // Change +92 to +7
   @override
   void dispose() {
@@ -44,48 +40,34 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    var _role = ModalRoute
-        .of(context)
-        ?.settings
-        .arguments as String;
+    var role = ModalRoute.of(context)?.settings.arguments as String;
+    var auth = Provider.of<Auth>(context, listen: false);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints:
-            BoxConstraints(maxHeight: MediaQuery
-                .of(context)
-                .size
-                .height),
+                BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
             child: Form(
               key: _formKey,
               child: Column(
                 children: [
                   SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 0.2,
+                    height: MediaQuery.of(context).size.height * 0.2,
                   ),
                   const Text(
                     'Register',
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 0.1,
+                    height: MediaQuery.of(context).size.height * 0.1,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width * 0.42,
+                          width: MediaQuery.of(context).size.width * 0.42,
                           child: TextFormField(
                             controller: firstNameController,
                             keyboardType: TextInputType.name,
@@ -101,10 +83,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             ),
                           )),
                       SizedBox(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width * 0.42,
+                          width: MediaQuery.of(context).size.width * 0.42,
                           child: TextFormField(
                             controller: secondNameController,
                             keyboardType: TextInputType.name,
@@ -115,8 +94,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               }
                               return null;
                             },
-                            decoration:
-                            const InputDecoration(label: Text('Second Name')),
+                            decoration: const InputDecoration(
+                                label: Text('Second Name')),
                           )),
                     ],
                   ),
@@ -146,7 +125,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           controller: phoneController,
                           validator: (val) {
                             if (val == null ||
-                                val.length != 10 || int.tryParse(val) == null) {
+                                val.length != 10 ||
+                                int.tryParse(val) == null) {
                               return 'Enter a valid phone number';
                             }
                             return null;
@@ -158,33 +138,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   const SizedBox(
                     height: 25,
                   ),
-                  _role == 'doctor'
+                  role == 'doctor'
                       ? TextFormField(
-                    controller: clinicNameController,
-                    decoration: const InputDecoration(
-                      label: Text("Name of the clinic"),
-                    ),
-                    validator: (val) {
-                      if (val == null || val.isEmpty) {
-                        return 'Enter a valid name';
-                      }
-                      return null;
-                    },
-                  )
+                          controller: clinicNameController,
+                          decoration: const InputDecoration(
+                            label: Text("Name of the clinic"),
+                          ),
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return 'Enter a valid name';
+                            }
+                            return null;
+                          },
+                        )
                       : TextFormField(
-                    controller: iinController,
-                    decoration:
-                    InputDecoration(label: Text("IIN Number")),
-                    keyboardType: TextInputType.number,
-                    validator: (val) {
-                      if (val == null ||
-                          val.isEmpty ||
-                          val.length != 12) {
-                        return 'Enter your 12 digit IIN Number';
-                      }
-                      return null;
-                    },
-                  ),
+                          controller: iinController,
+                          decoration:
+                              InputDecoration(label: Text("IIN Number")),
+                          keyboardType: TextInputType.number,
+                          validator: (val) {
+                            if (val == null ||
+                                val.isEmpty ||
+                                val.length != 12) {
+                              return 'Enter your 12 digit IIN Number';
+                            }
+                            return null;
+                          },
+                        ),
                   const SizedBox(
                     height: 25,
                   ),
@@ -215,60 +195,30 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       child: ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              var data={
+                              var data = {
                                 'firstName': firstNameController.text,
                                 'secondName': secondNameController.text,
                                 'phoneNumber': '+7${phoneController.text}',
-                                'password':passwordController.text,
-                                'role': _role,
-                                'clinicName':_role == 'doctor' ? clinicNameController.text : null,
-                                'iinNumber':_role == 'patient' ? iinController.text : null,
+                                'password': passwordController.text,
+                                'role': role,
+                                'clinicName': role == 'doctor'
+                                    ? clinicNameController.text
+                                    : null,
+                                'iinNumber': role == 'patient'
+                                    ? iinController.text
+                                    : null,
                               };
-                              var auth=FirebaseAuth.instance;
-                              await auth.verifyPhoneNumber(
-                                phoneNumber: '+7${phoneController.text}',
-                                verificationCompleted: (PhoneAuthCredential credential) async {
-                                  try {
-                                    await Provider.of<Auth>(
-                                        context, listen: false).register(
-                                        data, credential);
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                        _role == 'doctor'
-                                            ? DoctorHomePage.routeName
-                                            : PatientHomePage.routeName, (
-                                        _) => false);
-                                    var db = FirebaseFirestore.instance;
-                                    db.collection('users').doc(
-                                        '+7${phoneController.text}').set(data);
-                                  } catch(e){
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-                                  }
-                                },
-                                verificationFailed: (FirebaseAuthException e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message ?? e.code)));
-                                },
-                                codeSent: (String verificationId, int? resendToken) async {
-                                  try {
-                                    if(await Provider.of<Auth>(context,listen:false).checkIfUserExists('+7${phoneController.text}')) {
-                                      Navigator.pushNamed(
-                                          context,
-                                          OtpVerificationPage.routeName,
-                                          arguments: {
-                                            'role': _role,
-                                            'mode': 'Register',
-                                            'verificationId': verificationId,
-                                            'data': data
-                                          });
-                                    } else {
-                                      throw Exception('User already exists');
-                                    }
-                                  } catch(e){
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-                                  }
-                                },
-                                codeAutoRetrievalTimeout: (String verificationId) {},
-                              );
+                              try {
+                                await auth.register(data);
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    role == 'doctor'
+                                        ? DoctorHomePage.routeName
+                                        : PatientHomePage.routeName,
+                                    (_) => false);
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(e.toString())));
+                              }
                             }
                           },
                           child: const Text("Register"))),

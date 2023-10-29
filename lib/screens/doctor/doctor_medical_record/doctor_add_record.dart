@@ -23,29 +23,20 @@ class DoctorAddRecord extends StatelessWidget {
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints:
-            BoxConstraints(maxHeight: MediaQuery
-                .of(context)
-                .size
-                .height),
+                BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
             child: Form(
               key: _formKey,
               child: Column(
                 children: [
                   SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 0.15,
+                    height: MediaQuery.of(context).size.height * 0.15,
                   ),
                   const Text(
                     'Medication',
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 0.05,
+                    height: MediaQuery.of(context).size.height * 0.05,
                   ),
                   TextFormField(
                     controller: medicationController,
@@ -80,8 +71,8 @@ class DoctorAddRecord extends StatelessWidget {
                   ),
                   TextFormField(
                     controller: commentController,
-                    decoration:
-                    const InputDecoration(label: Text("Comment of the doctor")),
+                    decoration: const InputDecoration(
+                        label: Text("Comment of the doctor")),
                     keyboardType: TextInputType.text,
                     validator: (val) {
                       if (val == null || val.isEmpty) {
@@ -100,8 +91,10 @@ class DoctorAddRecord extends StatelessWidget {
                             if (_formKey.currentState!.validate()) {
                               Provider.of<Doctor>(context, listen: false)
                                   .setMedicalRecord(
-                                  context, medicationController.text,
-                                  dosageController.text, commentController.text);
+                                      context,
+                                      medicationController.text,
+                                      dosageController.text,
+                                      commentController.text);
                               Navigator.of(context).pop();
                             }
                           },

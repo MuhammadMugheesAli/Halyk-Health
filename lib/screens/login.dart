@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:halyk_health/providers/auth.dart';
-import 'package:halyk_health/screens/otp_verification.dart';
 import 'package:halyk_health/screens/patient/patient_home_page.dart';
 import 'package:provider/provider.dart';
 
@@ -33,10 +31,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    var role=ModalRoute
-        .of(context)
-        ?.settings
-        .arguments as String;
+    var role = ModalRoute.of(context)?.settings.arguments as String;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -121,50 +116,27 @@ class _LoginPageState extends State<LoginPage> {
                       child: ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
+                              var data = {
+                                "phoneNumber":
+                                    '+7${phoneNumberController.text}',
+                                'password': passwordController.text,
+                                'role': role,
+                              };
                               try {
-                              //   Provider.of<Auth>(context,listen: false).checkIfUserExists('+7${phoneNumberController
-                              //       .text}', passwordController.text, ModalRoute
-                              //       .of(context)
-                              //       ?.settings
-                              //       .arguments as String);
-                              // var otp =
-                              //     Provider.of<Auth>(context, listen: false)
-                              //         .sendOtp();
-                              // print(otp);
-                                await Provider.of<Auth>(context,listen: false).checkLoginCredentials('+7${phoneNumberController.text}', passwordController.text, role);
-                                var auth=FirebaseAuth.instance;
-                                await auth.verifyPhoneNumber(
-                                  phoneNumber: '+7${phoneNumberController.text}',
-                                  verificationCompleted: (PhoneAuthCredential credential) async {
-                                    Provider.of<Auth>(context,listen: false).login('+7${phoneNumberController.text}', passwordController.text, role, credential);
-                                    Navigator.of(context).pushNamedAndRemoveUntil(
-                                        role == 'doctor'
-                                            ? DoctorHomePage.routeName
-                                            : PatientHomePage.routeName, (
-                                        _) => false);
-                                  },
-                                  verificationFailed: (FirebaseAuthException e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message ?? e.code)));
-                                  },
-                                  codeSent: (String verificationId, int? resendToken) {
-                                    Navigator.pushNamed(
-                                        context, OtpVerificationPage.routeName,
-                                        arguments: {
-                                          'mode': 'Login',
-                                          'role': role,
-                                          'verificationId':verificationId,
-                                          'data': {
-                                            "phoneNumber": '+7${phoneNumberController
-                                                .text}',
-                                            'password': passwordController.text,
-                                            'role': role,
-                                          }
-                                        });
-                                  },
-                                  codeAutoRetrievalTimeout: (String verificationId) {},
+                                await Provider.of<Auth>(context, listen: false)
+                                    .login(
+                                  data['phoneNumber']!,
+                                  data['password']!,
+                                  role,
                                 );
-                              } catch(e){
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    role == 'doctor'
+                                        ? DoctorHomePage.routeName
+                                        : PatientHomePage.routeName,
+                                    (_) => false);
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(e.toString())));
                               }
                             }
                           },

@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:halyk_health/models/user.dart' as model;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
   Auth() {
     init();
   }
 
-  void init() {
-    FirebaseAuth.instance.userChanges().listen((user) async {
-      if (user != null) {
+  Future<void> init() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var isLoggedIn=prefs.getBool('isLoggedIn');
+    if (isLoggedIn != null && isLoggedIn) {
         await getCurrentUser();
         if (currentUser != null) {
           _loggedIn = true;
@@ -21,10 +22,8 @@ class Auth with ChangeNotifier {
         _loggedIn = false;
       }
       notifyListeners();
-    });
   }
 
-  // List<User> _users=[];
   model.User? currentUser;
 
   bool _loggedIn = false;
@@ -32,13 +31,16 @@ class Auth with ChangeNotifier {
   bool get loggedIn => _loggedIn;
 
   Future<void> register(
-      Map<String, dynamic> data, PhoneAuthCredential credential) async {
+      Map<String, dynamic> data) async {
     try {
-      if (await checkIfUserExists(data["phoneNumber"])) {
+      if (await checkIfUserExists(data["phoneNumber"],data['role'])) {
         throw Exception('User already exists');
       }
-      var auth = FirebaseAuth.instance;
-      await auth.signInWithCredential(credential);
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('phoneNumber', data['phoneNumber']);
+      await prefs.setString('password', data['password']);
+      await prefs.setString('role', data['role']);
+      await prefs.setBool('isLoggedIn', true);
       await FirebaseFirestore.instance
           .collection('users')
           .doc(data['phoneNumber'])
@@ -58,20 +60,25 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> checkIfUserExists(String phoneNumber) async {
+  Future<bool> checkIfUserExists(String phoneNumber,String role) async {
     try {
       var collectionRef = FirebaseFirestore.instance.collection('users');
       var doc = await collectionRef.doc(phoneNumber).get();
-      return doc.exists;
+      if(doc.exists){
+        if(doc.get('role') == role){
+          return true;
+        }
+        return false;
+      }
+      return false;
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  Future<void> login(String phoneNumber, String password, String role,
-      PhoneAuthCredential credential) async {
+  Future<void> login(String phoneNumber, String password, String role) async {
     try {
-      if (await checkIfUserExists(phoneNumber)) {
+      if (await checkIfUserExists(phoneNumber,role)) {
         var data =
             FirebaseFirestore.instance.collection('users').doc(phoneNumber);
         late model.User user;
@@ -88,7 +95,11 @@ class Auth with ChangeNotifier {
         if (user.password == password) {
           if (user.role == role) {
             currentUser = user;
-            await FirebaseAuth.instance.signInWithCredential(credential);
+            final SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('phoneNumber', phoneNumber);
+            await prefs.setString('password', password);
+            await prefs.setString('role', role);
+            await prefs.setBool('isLoggedIn', true);
           } else {
             throw Exception("User doesn't exist");
           }
@@ -104,43 +115,11 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> checkLoginCredentials(
-      String phoneNumber, String password, String role) async {
-    try {
-      if (await checkIfUserExists(phoneNumber)) {
-        var data =
-            FirebaseFirestore.instance.collection('users').doc(phoneNumber);
-        late model.User user;
-        await data.get().then((value) {
-          user = model.User(
-              value['firstName'],
-              value['secondName'],
-              value['phoneNumber'],
-              value['role'],
-              value['password'],
-              value['clinicName'],
-              value['iinNumber']);
-        });
-        if (user?.password == password) {
-          if (user?.role == role) {
-          } else {
-            throw Exception("User doesn't exist");
-          }
-        } else {
-          throw Exception("Incorrect Password");
-        }
-      } else {
-        throw Exception("User doesn't exist");
-      }
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
-
   Future<void> getCurrentUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser?.phoneNumber?.replaceFirst('+92', '+7'))
+        .doc(prefs.getString('phoneNumber'))
         .get()
         .then((value) => currentUser = model.User(
             value['firstName'],
@@ -153,7 +132,11 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> logout() async {
-    await FirebaseAuth.instance.signOut();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('phoneNumber');
+    await prefs.remove('password');
+    await prefs.remove('role');
+    await prefs.setBool('isLoggedIn', false);
     currentUser = null;
     notifyListeners();
   }

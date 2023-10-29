@@ -1,18 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:halyk_health/screens/patient/patient_appointment/patient_add_appointment.dart';
-import 'package:halyk_health/screens/patient/patient_appointment/patient_appointment_page.dart';
-import 'package:halyk_health/screens/patient/patient_appointment/patient_appointment_page.dart';
 import 'package:halyk_health/screens/patient/patient_appointment/patient_appointment_page.dart';
 import 'package:halyk_health/screens/patient/patient_clinic_page.dart';
 import 'package:halyk_health/screens/patient/patient_diseases/patient_diseases_page.dart';
-import 'package:halyk_health/screens/patient/patient_diseases/patient_diseases_page.dart';
-import 'package:halyk_health/screens/patient/patient_diseases/patient_diseases_page.dart';
 import 'package:halyk_health/screens/patient/patient_education_page.dart';
-import 'package:halyk_health/screens/patient/patient_education_page.dart';
-import 'package:halyk_health/screens/patient/patient_education_page.dart';
-import 'package:halyk_health/screens/patient/patient_medical_card/patient_medical_page.dart';
-import 'package:halyk_health/screens/patient/patient_medical_card/patient_medical_page.dart';
 import 'package:halyk_health/screens/patient/patient_medical_card/patient_medical_page.dart';
 import 'package:halyk_health/screens/patient/patient_sympytoms_page.dart';
 import 'package:provider/provider.dart';
@@ -31,11 +21,11 @@ class PatientHomePage extends StatefulWidget {
 }
 
 class _PatientHomePageState extends State<PatientHomePage> {
-  Widget currentPage=const PatientClinicPage();
+  Widget currentPage = const PatientClinicPage();
 
   @override
   void initState() {
-    Provider.of<Patient>(context,listen: false).fetchAllDoctors();
+    Provider.of<Patient>(context, listen: false).fetchAllDoctors();
     super.initState();
   }
 
@@ -48,14 +38,14 @@ class _PatientHomePageState extends State<PatientHomePage> {
         child: Column(
           children: [
             UserAccountsDrawerHeader(
-                accountName:
-                    Text("${currentUser?.firstName} ${currentUser?.secondName}"),
+                accountName: Text(
+                    "${currentUser?.firstName} ${currentUser?.secondName}"),
                 accountEmail: Text(currentUser?.phoneNumber ?? '')),
             ListTile(
               title: const Text("Clinic"),
               onTap: () {
-                if(currentPage.runtimeType != PatientClinicPage){
-                  setState(() => currentPage=const PatientClinicPage());
+                if (currentPage.runtimeType != PatientClinicPage) {
+                  setState(() => currentPage = const PatientClinicPage());
                   Navigator.pop(context);
                 }
               },
@@ -64,8 +54,8 @@ class _PatientHomePageState extends State<PatientHomePage> {
             ListTile(
               title: const Text("Symptoms"),
               onTap: () {
-                if(currentPage.runtimeType != PatientSymptomsPage){
-                  setState(() => currentPage= const PatientSymptomsPage());
+                if (currentPage.runtimeType != PatientSymptomsPage) {
+                  setState(() => currentPage = const PatientSymptomsPage());
                   Navigator.pop(context);
                 }
               },
@@ -74,8 +64,8 @@ class _PatientHomePageState extends State<PatientHomePage> {
             ListTile(
               title: const Text("Diseases"),
               onTap: () {
-                if(currentPage.runtimeType != PatientDiseasesPage){
-                  setState(() => currentPage=const PatientDiseasesPage());
+                if (currentPage.runtimeType != PatientDiseasesPage) {
+                  setState(() => currentPage = const PatientDiseasesPage());
                   Navigator.pop(context);
                 }
               },
@@ -84,8 +74,8 @@ class _PatientHomePageState extends State<PatientHomePage> {
             ListTile(
               title: const Text("Medical Card"),
               onTap: () {
-                if(currentPage.runtimeType != PatientMedicalPage){
-                  setState(() => currentPage=const PatientMedicalPage());
+                if (currentPage.runtimeType != PatientMedicalPage) {
+                  setState(() => currentPage = const PatientMedicalPage());
                   Navigator.pop(context);
                 }
               },
@@ -94,8 +84,8 @@ class _PatientHomePageState extends State<PatientHomePage> {
             ListTile(
               title: const Text("Appointment"),
               onTap: () {
-                if(currentPage.runtimeType != PatientAppointmentPage){
-                  setState(() => currentPage=const PatientAppointmentPage());
+                if (currentPage.runtimeType != PatientAppointmentPage) {
+                  setState(() => currentPage = const PatientAppointmentPage());
                   Navigator.pop(context);
                 }
               },
@@ -104,8 +94,8 @@ class _PatientHomePageState extends State<PatientHomePage> {
             ListTile(
               title: const Text("Education"),
               onTap: () {
-                if(currentPage.runtimeType != PatientEducationPage){
-                  setState(() => currentPage= PatientEducationPage());
+                if (currentPage.runtimeType != PatientEducationPage) {
+                  setState(() => currentPage = PatientEducationPage());
                   Navigator.pop(context);
                 }
               },
@@ -116,8 +106,9 @@ class _PatientHomePageState extends State<PatientHomePage> {
               title: const Text("Logout"),
               onTap: () async {
                 try {
-                  await Provider.of<Auth>(context,listen:false).logout();
-                  Navigator.pushNamedAndRemoveUntil(context, SigningPage.routeName, (route) => false);
+                  await Provider.of<Auth>(context, listen: false).logout();
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, SigningPage.routeName, (route) => false);
                 } catch (e) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text(e.toString())));

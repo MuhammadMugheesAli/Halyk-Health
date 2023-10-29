@@ -8,13 +8,11 @@ class SigningPage extends StatefulWidget {
   @override
   State<SigningPage> createState() => _SigningPageState();
 
-  static const routeName='/signing-page';
-
+  static const routeName = '/signing-page';
 }
 
 class _SigningPageState extends State<SigningPage> {
   String? role;
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +57,8 @@ class _SigningPageState extends State<SigningPage> {
                   child: ElevatedButton(
                       onPressed: role != null
                           ? () {
-                              Navigator.pushNamed(
-                                  context, LoginPage.routeName,arguments: role);
+                              Navigator.pushNamed(context, LoginPage.routeName,
+                                  arguments: role);
                             }
                           : null,
                       child: const Text('Login'))),
@@ -73,7 +71,8 @@ class _SigningPageState extends State<SigningPage> {
                       onPressed: role != null
                           ? () {
                               Navigator.pushNamed(
-                                  context, RegistrationPage.routeName,arguments: role);
+                                  context, RegistrationPage.routeName,
+                                  arguments: role);
                             }
                           : null,
                       child: const Text('Register'))),

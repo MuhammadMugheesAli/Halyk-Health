@@ -12,20 +12,27 @@ class PatientDiseasesPage extends StatefulWidget {
 }
 
 class _PatientDiseasesPageState extends State<PatientDiseasesPage> {
-  var pageNumber=0;
+  var pageNumber = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(bottomNavigationBar: BottomNavigationBar(
-      currentIndex: pageNumber,
-      onTap: (index) => setState(() => pageNumber=index),
-        items: [
-          BottomNavigationBarItem(icon: Container(),label: 'Diseases',),
-          BottomNavigationBarItem(icon: Container(),label: 'Helplines'),
-        ]),body: getPage(pageNumber),);
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+          currentIndex: pageNumber,
+          onTap: (index) => setState(() => pageNumber = index),
+          items: [
+            BottomNavigationBarItem(
+              icon: Container(),
+              label: 'Diseases',
+            ),
+            BottomNavigationBarItem(icon: Container(), label: 'Helplines'),
+          ]),
+      body: getPage(pageNumber),
+    );
   }
-  Widget getPage(int index){
-    if(index == 0){
+
+  Widget getPage(int index) {
+    if (index == 0) {
       return const PatientDiseases();
     }
     return const PatientDiseasesHelplines();

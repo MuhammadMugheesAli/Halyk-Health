@@ -1,5 +1,3 @@
-import 'package:halyk_health/models/user.dart';
-
 class Appointment {
   final String firstName;
   final String secondName;

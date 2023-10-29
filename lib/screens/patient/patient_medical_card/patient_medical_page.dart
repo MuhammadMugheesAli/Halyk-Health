@@ -47,7 +47,9 @@ class _PatientMedicalPageState extends State<PatientMedicalPage> {
                                     alignment: Alignment.topCenter,
                                     child: Text(
                                       '${data['firstName']} ${data['secondName']}',
-                                      style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
                                     )),
                                 const SizedBox(
                                   height: 10,

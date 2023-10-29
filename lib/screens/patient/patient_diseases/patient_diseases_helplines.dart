@@ -14,7 +14,8 @@ class PatientDiseasesHelplines extends StatelessWidget {
             'Обращаться за психологической поддержкой можно и по WhatsApp (круглосуточно) по следующим номерам:',
             style: TextStyle(fontSize: 16),
           ),
-          SelectableText.rich(TextSpan(style:TextStyle(fontSize: 16),children: [
+          SelectableText.rich(
+              TextSpan(style: TextStyle(fontSize: 16), children: [
             TextSpan(text: '+ 7 747 102 70 03,'),
             TextSpan(text: '\n+ 7 777 928 73 33,'),
             TextSpan(text: '\n+7 705 234 33 03,'),

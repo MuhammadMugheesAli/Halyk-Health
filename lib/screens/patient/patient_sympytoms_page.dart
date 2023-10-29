@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 class PatientSymptomsPage extends StatefulWidget {
   const PatientSymptomsPage({Key? key}) : super(key: key);
 
-  static const routeName='/patient-symptoms-page';
+  static const routeName = '/patient-symptoms-page';
 
   @override
   State<PatientSymptomsPage> createState() => _PatientSymptomsPageState();
 }
 
 class _PatientSymptomsPageState extends State<PatientSymptomsPage> {
-
   String patientAreaOfPain = '';
   String selectedDoctor = 'General Practitioner';
 
@@ -19,12 +18,14 @@ class _PatientSymptomsPageState extends State<PatientSymptomsPage> {
     'chest': 'Cardiologist',
     'abdomen': 'Gastroenterologist',
     'leg': 'Orthopedic Surgeon',
-    'eye' : 'Ophthalmologist'
+    'eye': 'Ophthalmologist'
   };
 
   void recommendDoctor() {
     setState(() {
-      selectedDoctor = doctorMapping[patientAreaOfPain.toLowerCase().replaceAll(' ', '')] ?? 'General Practitioner';
+      selectedDoctor =
+          doctorMapping[patientAreaOfPain.toLowerCase().replaceAll(' ', '')] ??
+              'General Practitioner';
     });
   }
 
@@ -42,8 +43,11 @@ class _PatientSymptomsPageState extends State<PatientSymptomsPage> {
                 patientAreaOfPain = text;
               },
             ),
-            SizedBox(height: 10,),
-            SizedBox(width: double.maxFinite,
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: double.maxFinite,
               child: ElevatedButton(
                 onPressed: recommendDoctor,
                 child: Text('Recommend Doctor'),

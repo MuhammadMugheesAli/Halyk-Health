@@ -11,13 +11,14 @@ class PatientDiseases extends StatefulWidget {
 }
 
 class _PatientDiseasesState extends State<PatientDiseases> {
-  var searchController=TextEditingController();
+  var searchController = TextEditingController();
 
   List<PsychiatricDisease>? list;
   late List<PsychiatricDisease> diseasesList;
+
   @override
   Widget build(BuildContext context) {
-    diseasesList=Provider.of<Patient>(context).diseases;
+    diseasesList = Provider.of<Patient>(context).diseases;
     list ??= diseasesList;
     return Column(
       children: [
@@ -74,9 +75,11 @@ class _PatientDiseasesState extends State<PatientDiseases> {
     );
   }
 
-  void filter(String val){
+  void filter(String val) {
     setState(() {
-    list=diseasesList.where((element) => element.symptom.contains(val)).toList();
+      list = diseasesList
+          .where((element) => element.symptom.contains(val))
+          .toList();
     });
   }
 }
